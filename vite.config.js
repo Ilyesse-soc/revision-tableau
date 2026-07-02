@@ -2,10 +2,10 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import { VitePWA } from 'vite-plugin-pwa'
 
-// IMPORTANT : remplace "quran-revision-tracker" ci-dessous par le nom EXACT
+// IMPORTANT : remplace "revision-tableau" ci-dessous par le nom EXACT
 // de ton dépôt GitHub si tu le renommes, sinon GitHub Pages ne trouvera pas
 // les fichiers (CSS/JS) une fois déployé.
-const REPO_NAME = 'quran-revision-tracker'
+const REPO_NAME = 'revision-tableau'
 
 export default defineConfig({
   base: `/${REPO_NAME}/`,
