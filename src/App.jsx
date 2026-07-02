@@ -201,8 +201,8 @@ export default function App() {
     })
   }
 
-  function handleReorder(index, direction) {
-    setHizbList((prev) => moveHizbInList(prev, index, direction))
+  function handleReorder(fromIndex, toIndex) {
+    setHizbList((prev) => moveHizbInList(prev, fromIndex, toIndex))
   }
 
   function goToday() {

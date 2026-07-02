@@ -50,8 +50,7 @@ export function updateHizbInList(list, oldHizb, newHizb) {
   return isAscending(next) ? [...next].sort((a, b) => a - b) : next
 }
 
-export function moveHizbInList(list, fromIndex, direction) {
-  const toIndex = fromIndex + direction
+export function moveHizbInList(list, fromIndex, toIndex) {
   if (fromIndex < 0 || fromIndex >= list.length) return list
   if (toIndex < 0 || toIndex >= list.length) return list
 

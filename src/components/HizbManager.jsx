@@ -1,9 +1,7 @@
 import { useMemo, useState } from 'react'
-import { moveHizbInList } from '../utils/hizbLogic'
 
 export default function HizbManager({
   hizbList,
-  onAdd,
   onEdit,
   onDelete,
   onReorder,
@@ -11,6 +9,8 @@ export default function HizbManager({
   onOpenAdd
 }) {
   const [expanded, setExpanded] = useState(false)
+  const [dragIndex, setDragIndex] = useState(null)
+  const [dropIndex, setDropIndex] = useState(null)
   const isDark = theme === 'dark'
 
   const summary = useMemo(() => {
@@ -62,15 +62,42 @@ export default function HizbManager({
               {hizbList.map((hizb, index) => {
                 const canMoveUp = index > 0
                 const canMoveDown = index < hizbList.length - 1
+                const isDragging = dragIndex === index
+                const isDropTarget = dropIndex === index
                 return (
                   <div
                     key={hizb}
-                    className={`rounded-xl border px-3 py-2 flex flex-col sm:flex-row sm:items-center gap-3 ${
+                    draggable
+                    onDragStart={() => setDragIndex(index)}
+                    onDragEnd={() => {
+                      setDragIndex(null)
+                      setDropIndex(null)
+                    }}
+                    onDragOver={(e) => {
+                      e.preventDefault()
+                      setDropIndex(index)
+                    }}
+                    onDrop={(e) => {
+                      e.preventDefault()
+                      if (dragIndex !== null && dragIndex !== index) {
+                        onReorder(dragIndex, index)
+                      }
+                      setDragIndex(null)
+                      setDropIndex(null)
+                    }}
+                    className={`rounded-xl border px-3 py-2 flex flex-col sm:flex-row sm:items-center gap-3 transition-all cursor-grab active:cursor-grabbing ${
                       isDark ? 'border-slate-800 bg-slate-950/40' : 'border-slate-200 bg-slate-50'
+                    } ${isDragging ? 'opacity-40 scale-[0.99]' : ''} ${
+                      isDropTarget && dragIndex !== index ? 'ring-2 ring-brand-500' : ''
                     }`}
                   >
                     <div className="min-w-0 flex-1">
-                      <p className={`font-semibold ${isDark ? 'text-white' : 'text-slate-900'}`}>Hizb {hizb}</p>
+                      <p className={`font-semibold flex items-center gap-2 ${isDark ? 'text-white' : 'text-slate-900'}`}>
+                        <span className={`inline-flex h-6 w-6 items-center justify-center rounded-md text-[11px] ${isDark ? 'bg-slate-800 text-slate-300' : 'bg-slate-200 text-slate-600'}`}>
+                          ☰
+                        </span>
+                        Hizb {hizb}
+                      </p>
                       <p className={`text-[11px] ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
                         Position {index + 1} sur {hizbList.length}
                       </p>
@@ -79,7 +106,7 @@ export default function HizbManager({
                       <button
                         type="button"
                         disabled={!canMoveUp}
-                        onClick={() => onReorder(index, -1)}
+                        onClick={() => onReorder(index, index - 1)}
                         className={`px-3 h-9 rounded-lg text-sm transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${
                           isDark ? 'bg-slate-800 text-slate-200 hover:bg-slate-700' : 'bg-slate-200 text-slate-700 hover:bg-slate-300'
                         }`}
@@ -89,7 +116,7 @@ export default function HizbManager({
                       <button
                         type="button"
                         disabled={!canMoveDown}
-                        onClick={() => onReorder(index, 1)}
+                        onClick={() => onReorder(index, index + 1)}
                         className={`px-3 h-9 rounded-lg text-sm transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${
                           isDark ? 'bg-slate-800 text-slate-200 hover:bg-slate-700' : 'bg-slate-200 text-slate-700 hover:bg-slate-300'
                         }`}
