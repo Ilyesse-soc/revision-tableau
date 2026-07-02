@@ -4,6 +4,7 @@ import WeekTable from './components/WeekTable'
 import SummaryCards from './components/SummaryCards'
 import RegularityChart from './components/RegularityChart'
 import AddHizbModal from './components/AddHizbModal'
+import HizbManager from './components/HizbManager'
 import { useLocalStorage } from './hooks/useLocalStorage'
 import {
   getMonday,
@@ -13,7 +14,14 @@ import {
   weeksBetween,
   formatDayLabel
 } from './utils/dateUtils'
-import { DEFAULT_HIZB_LIST, addHizbToList, getHizbForWeek } from './utils/hizbLogic'
+import {
+  DEFAULT_HIZB_LIST,
+  addHizbToList,
+  getHizbForWeek,
+  removeHizbFromList,
+  updateHizbInList,
+  moveHizbInList
+} from './utils/hizbLogic'
 import { computeStreaks, computeRegularity } from './utils/stats'
 
 function getToday() {
@@ -47,6 +55,8 @@ export default function App() {
   const [currentMonday, setCurrentMonday] = useState(() => getMonday(today))
 
   const [modalOpen, setModalOpen] = useState(false)
+  const [editModalOpen, setEditModalOpen] = useState(false)
+  const [editingHizb, setEditingHizb] = useState(null)
 
   useEffect(() => {
     const id = setInterval(() => {
@@ -150,6 +160,51 @@ export default function App() {
     setHizbList((prev) => addHizbToList(prev, n))
   }
 
+  function openAddModal() {
+    setEditingHizb(null)
+    setModalOpen(true)
+  }
+
+  function openEditModal(hizb) {
+    setEditingHizb(hizb)
+    setEditModalOpen(true)
+  }
+
+  function handleEditHizb(nextValue) {
+    if (editingHizb === null) return
+
+    setHizbList((prev) => updateHizbInList(prev, editingHizb, nextValue))
+    setCompletions((prev) => {
+      const next = {}
+      for (const [key, value] of Object.entries(prev)) {
+        const [dateISO, hizb] = key.split('__')
+        if (Number(hizb) === editingHizb) {
+          next[`${dateISO}__${nextValue}`] = value
+        } else {
+          next[key] = value
+        }
+      }
+      return next
+    })
+    setEditingHizb(null)
+  }
+
+  function handleDeleteHizb(hizb) {
+    setHizbList((prev) => removeHizbFromList(prev, hizb))
+    setCompletions((prev) => {
+      const next = {}
+      for (const [key, value] of Object.entries(prev)) {
+        const [, keyHizb] = key.split('__')
+        if (Number(keyHizb) !== hizb) next[key] = value
+      }
+      return next
+    })
+  }
+
+  function handleReorder(index, direction) {
+    setHizbList((prev) => moveHizbInList(prev, index, direction))
+  }
+
   function goToday() {
     setCurrentMonday(getMonday(today))
   }
@@ -206,19 +261,28 @@ export default function App() {
         onPrevWeek={goPrevWeek}
         onNextWeek={goNextWeek}
         onToday={goToday}
-        onAddHizb={() => setModalOpen(true)}
+        onAddHizb={openAddModal}
         weekRangeLabel={weekRangeLabel}
         dateTimeLabel={dateTimeLabel}
         theme={theme}
         onToggleTheme={() => setTheme((t) => (t === 'dark' ? 'light' : 'dark'))}
       />
 
-      <main className="max-w-3xl mx-auto px-3 sm:px-4 py-4 flex flex-col gap-4">
+      <main className="max-w-5xl mx-auto px-3 sm:px-4 py-4 flex flex-col gap-4">
         <SummaryCards
           thisWeekCount={thisWeekCount}
           thisWeekPercent={thisWeekRegularity.percent}
           currentStreak={streaks.current}
           bestStreak={streaks.best}
+          theme={theme}
+        />
+
+        <HizbManager
+          hizbList={hizbList}
+          onOpenAdd={openAddModal}
+          onEdit={openEditModal}
+          onDelete={handleDeleteHizb}
+          onReorder={handleReorder}
           theme={theme}
         />
 
@@ -249,9 +313,22 @@ export default function App() {
       <AddHizbModal
         open={modalOpen}
         onClose={() => setModalOpen(false)}
-        onAdd={handleAddHizb}
+        onSubmit={handleAddHizb}
         existingList={hizbList}
         theme={theme}
+        title="Ajouter un Hizb"
+        description="Le Hizb sera inséré et le planning se rééquilibrera entre les deux semaines."
+      />
+
+      <AddHizbModal
+        open={editModalOpen}
+        onClose={() => setEditModalOpen(false)}
+        onSubmit={handleEditHizb}
+        existingList={hizbList}
+        theme={theme}
+        title="Modifier un Hizb"
+        description="Change le numéro du Hizb sans perdre l’historique des coches associées."
+        initialValue={editingHizb ?? ''}
       />
     </div>
   )

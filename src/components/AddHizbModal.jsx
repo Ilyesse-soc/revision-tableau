@@ -1,24 +1,35 @@
 import { useState } from 'react'
 
-export default function AddHizbModal({ open, onClose, onAdd, existingList, theme }) {
+export default function AddHizbModal({
+  open,
+  onClose,
+  onSubmit,
+  existingList,
+  theme,
+  title,
+  description,
+  initialValue = ''
+}) {
   const [value, setValue] = useState('')
   const [error, setError] = useState('')
   const isDark = theme === 'dark'
 
   if (!open) return null
 
+  const effectiveValue = value === '' ? initialValue : value
+
   function handleSubmit(e) {
     e.preventDefault()
-    const n = Number(value)
+    const n = Number(effectiveValue)
     if (!Number.isInteger(n) || n < 1 || n > 60) {
       setError('Entre un numéro de Hizb valide (1 à 60).')
       return
     }
-    if (existingList.includes(n)) {
+    if (existingList.includes(n) && n !== Number(initialValue)) {
       setError('Ce Hizb est déjà dans le planning.')
       return
     }
-    onAdd(n)
+    onSubmit(n)
     setValue('')
     setError('')
     onClose()
@@ -31,18 +42,15 @@ export default function AddHizbModal({ open, onClose, onAdd, existingList, theme
           isDark ? 'bg-slate-900 border-slate-700' : 'bg-white border-slate-200'
         }`}
       >
-        <h3 className={`font-semibold mb-1 ${isDark ? 'text-white' : 'text-slate-900'}`}>Ajouter un Hizb</h3>
-        <p className={`text-xs mb-3 ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
-          Le Hizb sera automatiquement inséré dans le cycle et le planning se rééquilibrera
-          entre les deux semaines.
-        </p>
+        <h3 className={`font-semibold mb-1 ${isDark ? 'text-white' : 'text-slate-900'}`}>{title}</h3>
+        <p className={`text-xs mb-3 ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>{description}</p>
         <form onSubmit={handleSubmit} className="flex flex-col gap-3">
           <input
             type="number"
             min={1}
             max={60}
             autoFocus
-            value={value}
+            value={effectiveValue}
             onChange={(e) => setValue(e.target.value)}
             placeholder="Ex : 46"
             className={`border rounded-lg px-3 py-2 focus:outline-none focus:border-brand-500 ${
