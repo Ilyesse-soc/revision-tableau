@@ -6,11 +6,11 @@ export default function WeekTable({ weekDates, hizbList, completions, onToggle, 
 
   return (
     <div
-      className={`rounded-2xl p-3 sm:p-4 shadow-lg border transition-colors ${
+      className={`rounded-2xl p-3 sm:p-4 shadow-lg border transition-colors overflow-hidden ${
         isDark ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200'
       }`}
     >
-      <div className="flex items-center justify-between mb-3">
+      <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between mb-3">
         <h2 className="text-sm sm:text-base font-semibold text-brand-300">{weekLabel}</h2>
         <span className={`text-xs ${isDark ? 'text-slate-500' : 'text-slate-600'}`}>{hizbList.length} Hizb</span>
       </div>
@@ -20,8 +20,8 @@ export default function WeekTable({ weekDates, hizbList, completions, onToggle, 
           Aucun Hizb dans ce groupe pour l'instant. Ajoute un Hizb avec le bouton "+".
         </p>
       ) : (
-        <div className="overflow-x-auto scrollbar-thin -mx-1 px-1">
-          <table className="w-full text-center border-separate border-spacing-1 min-w-[560px]">
+        <div className="overflow-x-auto scrollbar-thin -mx-2 px-2 sm:-mx-1 sm:px-1">
+          <table className="w-full text-center border-separate border-spacing-1 min-w-[520px] sm:min-w-[560px]">
             <thead>
               <tr>
                 <th
@@ -70,7 +70,7 @@ export default function WeekTable({ weekDates, hizbList, completions, onToggle, 
                           type="button"
                           onClick={() => onToggle(iso, hizb)}
                           aria-label={`Hizb ${hizb} - ${DAY_LABELS_SHORT[i]}`}
-                          className={`w-9 h-9 sm:w-10 sm:h-10 rounded-lg border-2 flex items-center justify-center transition-colors
+                            className={`w-8 h-8 sm:w-10 sm:h-10 rounded-lg border-2 flex items-center justify-center transition-colors
                             ${checked
                               ? 'bg-brand-600 border-brand-500 text-white'
                               : isDark
@@ -80,7 +80,7 @@ export default function WeekTable({ weekDates, hizbList, completions, onToggle, 
                           `}
                         >
                           {checked && (
-                            <svg viewBox="0 0 24 24" className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="3">
+                            <svg viewBox="0 0 24 24" className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" strokeWidth="3">
                               <path d="M5 13l4 4L19 7" strokeLinecap="round" strokeLinejoin="round" />
                             </svg>
                           )}

@@ -20,29 +20,29 @@ export default function HizbManager({
 
   return (
     <section
-      className={`rounded-2xl border shadow-lg transition-colors ${
+      className={`rounded-2xl border shadow-lg transition-colors overflow-hidden ${
         isDark ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200'
       }`}
     >
-      <div className="flex items-center justify-between gap-2 px-3 sm:px-4 py-3 border-b border-inherit">
-        <div>
+      <div className="flex flex-col gap-3 px-3 sm:px-4 py-3 border-b border-inherit sm:flex-row sm:items-center sm:justify-between">
+        <div className="min-w-0">
           <h2 className={`text-sm sm:text-base font-semibold ${isDark ? 'text-white' : 'text-slate-900'}`}>
             Gestion des Hizb
           </h2>
           <p className={`text-[11px] ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>{summary}</p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:items-center sm:justify-end">
           <button
             type="button"
             onClick={onOpenAdd}
-            className="px-3 h-9 rounded-lg bg-brand-600 text-white text-sm font-medium hover:bg-brand-500"
+            className="h-9 rounded-lg bg-brand-600 px-3 text-white text-sm font-medium hover:bg-brand-500"
           >
             Ajouter
           </button>
           <button
             type="button"
             onClick={() => setExpanded((v) => !v)}
-            className={`px-3 h-9 rounded-lg text-sm transition-colors ${
+            className={`h-9 rounded-lg px-3 text-sm transition-colors ${
               isDark ? 'bg-slate-800 text-slate-200 hover:bg-slate-700' : 'bg-slate-200 text-slate-700 hover:bg-slate-300'
             }`}
           >
@@ -58,7 +58,7 @@ export default function HizbManager({
               Ajoute un Hizb pour commencer à organiser le planning.
             </p>
           ) : (
-            <div className="space-y-2 max-h-[50vh] overflow-auto pr-1">
+            <div className="space-y-2 max-h-[52vh] overflow-auto pr-1">
               {hizbList.map((hizb, index) => {
                 const canMoveUp = index > 0
                 const canMoveDown = index < hizbList.length - 1
@@ -85,7 +85,7 @@ export default function HizbManager({
                       setDragIndex(null)
                       setDropIndex(null)
                     }}
-                    className={`rounded-xl border px-3 py-2 flex flex-col sm:flex-row sm:items-center gap-3 transition-all cursor-grab active:cursor-grabbing ${
+                    className={`rounded-xl border px-3 py-3 flex flex-col sm:flex-row sm:items-center gap-3 transition-all cursor-grab active:cursor-grabbing ${
                       isDark ? 'border-slate-800 bg-slate-950/40' : 'border-slate-200 bg-slate-50'
                     } ${isDragging ? 'opacity-40 scale-[0.99]' : ''} ${
                       isDropTarget && dragIndex !== index ? 'ring-2 ring-brand-500' : ''
@@ -102,7 +102,7 @@ export default function HizbManager({
                         Position {index + 1} sur {hizbList.length}
                       </p>
                     </div>
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:flex sm:flex-wrap sm:justify-end">
+                    <div className="grid grid-cols-2 gap-2 sm:flex sm:flex-wrap sm:justify-end">
                       <button
                         type="button"
                         disabled={!canMoveUp}

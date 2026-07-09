@@ -9,11 +9,11 @@ export default function SummaryCards({ thisWeekCount, thisWeekPercent, currentSt
   ]
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3">
       {cards.map((c) => (
         <div
           key={c.label}
-          className={`rounded-2xl p-3 flex flex-col items-start gap-1 border transition-colors ${
+          className={`rounded-2xl p-3 sm:p-4 flex flex-col items-start gap-1 border transition-colors ${
             isDark ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200'
           }`}
         >

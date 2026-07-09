@@ -38,7 +38,7 @@ export default function AddHizbModal({
   return (
     <div className="fixed inset-0 z-20 flex items-end sm:items-center justify-center bg-black/60 p-3">
       <div
-        className={`rounded-2xl p-4 w-full max-w-sm border transition-colors ${
+        className={`w-full max-w-md rounded-2xl border p-4 sm:p-5 transition-colors max-h-[90vh] overflow-auto ${
           isDark ? 'bg-slate-900 border-slate-700' : 'bg-white border-slate-200'
         }`}
       >
@@ -60,11 +60,11 @@ export default function AddHizbModal({
             }`}
           />
           {error && <p className="text-red-400 text-xs">{error}</p>}
-          <div className="flex gap-2 justify-end">
+          <div className="grid grid-cols-2 gap-2 sm:flex sm:justify-end">
             <button
               type="button"
               onClick={onClose}
-              className={`px-3 py-2 rounded-lg text-sm transition-colors ${
+              className={`w-full px-3 py-2 rounded-lg text-sm transition-colors ${
                 isDark
                   ? 'bg-slate-800 text-slate-200 hover:bg-slate-700'
                   : 'bg-slate-200 text-slate-700 hover:bg-slate-300'
@@ -74,7 +74,7 @@ export default function AddHizbModal({
             </button>
             <button
               type="submit"
-              className="px-3 py-2 rounded-lg bg-brand-600 text-white text-sm font-medium hover:bg-brand-500"
+              className="w-full px-3 py-2 rounded-lg bg-brand-600 text-white text-sm font-medium hover:bg-brand-500"
             >
               Ajouter
             </button>

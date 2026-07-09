@@ -48,13 +48,13 @@ export default function RegularityChart({ completions, hizbList, today, cycleSta
 
   return (
     <div
-      className={`rounded-2xl p-3 sm:p-4 border transition-colors ${
+      className={`rounded-2xl p-3 sm:p-4 border transition-colors overflow-hidden ${
         isDark ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200'
       }`}
     >
-      <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
+      <div className="flex flex-col gap-2 mb-3 sm:flex-row sm:items-center sm:justify-between sm:flex-wrap sm:gap-2">
         <h2 className="text-sm sm:text-base font-semibold text-brand-300">Régularité</h2>
-        <div className={`flex gap-1 rounded-lg p-1 ${isDark ? 'bg-slate-800' : 'bg-slate-100'}`}>
+        <div className={`flex gap-1 rounded-lg p-1 overflow-x-auto ${isDark ? 'bg-slate-800' : 'bg-slate-100'}`}>
           {PERIODS.map((p) => (
             <button
               key={p.key}
@@ -73,21 +73,21 @@ export default function RegularityChart({ completions, hizbList, today, cycleSta
         </div>
       </div>
 
-      <div className="flex gap-4 mb-3 text-sm">
-        <div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-3 text-sm">
+        <div className="rounded-lg px-3 py-2 border border-transparent">
           <span className={isDark ? 'text-slate-400' : 'text-slate-600'}>Jours révisés : </span>
           <span className={`font-semibold ${isDark ? 'text-white' : 'text-slate-900'}`}>
             {regularity.daysDone}/{regularity.totalDays} ({regularity.percent}%)
           </span>
         </div>
-        <div>
+        <div className="rounded-lg px-3 py-2 border border-transparent">
           <span className={isDark ? 'text-slate-400' : 'text-slate-600'}>Hizb distincts : </span>
           <span className={`font-semibold ${isDark ? 'text-white' : 'text-slate-900'}`}>{distinctHizb}</span>
         </div>
       </div>
 
       <div className={`mb-3 rounded-xl border px-3 py-2 ${isDark ? 'border-slate-800 bg-slate-950/40' : 'border-slate-200 bg-slate-50'}`}>
-        <div className="flex items-center justify-between gap-2 mb-2">
+        <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between sm:gap-2 mb-2">
           <p className={`text-xs font-semibold uppercase tracking-wide ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
             Hizb non révisés sur la période
           </p>
@@ -113,7 +113,7 @@ export default function RegularityChart({ completions, hizbList, today, cycleSta
         )}
       </div>
 
-      <div className="h-52 w-full">
+      <div className="h-48 sm:h-52 w-full">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={chartData} margin={{ top: 5, right: 5, left: -20, bottom: 0 }}>
             <CartesianGrid strokeDasharray="3 3" stroke={isDark ? '#1e293b' : '#cbd5e1'} />

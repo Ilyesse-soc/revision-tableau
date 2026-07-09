@@ -16,15 +16,20 @@ export default function Navbar({
         isDark ? 'bg-slate-950/95 border-slate-800' : 'bg-white/95 border-slate-200'
       }`}
     >
-      <div className="max-w-3xl mx-auto flex items-center justify-between gap-2">
-        <div>
+      <div className="max-w-6xl mx-auto flex flex-col gap-3">
+        <div className="flex items-start justify-between gap-3">
+          <div className="min-w-0">
           <h1 className={`text-base sm:text-lg font-bold leading-tight ${isDark ? 'text-white' : 'text-slate-900'}`}>
             📖 Quran Revision Tracker
           </h1>
-          <p className={`text-xs ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>{weekRangeLabel}</p>
-          <p className={`text-[11px] ${isDark ? 'text-brand-300' : 'text-brand-700'}`}>{dateTimeLabel}</p>
+            <p className={`text-xs ${isDark ? 'text-slate-400' : 'text-slate-600'} break-words`}>{weekRangeLabel}</p>
+            <p className={`text-[11px] ${isDark ? 'text-brand-300' : 'text-brand-700'} break-words`}>
+              {dateTimeLabel}
+            </p>
+          </div>
         </div>
-        <div className="flex items-center gap-1.5">
+
+        <div className="grid grid-cols-5 gap-1.5 sm:flex sm:flex-wrap sm:justify-end">
           <button
             onClick={onPrevWeek}
             aria-label="Semaine précédente"
@@ -38,7 +43,7 @@ export default function Navbar({
           </button>
           <button
             onClick={onToday}
-            className="px-3 h-9 rounded-lg bg-brand-700 hover:bg-brand-600 text-white text-sm font-medium"
+            className="col-span-2 sm:col-auto px-3 h-9 rounded-lg bg-brand-700 hover:bg-brand-600 text-white text-sm font-medium"
           >
             Aujourd'hui
           </button>
