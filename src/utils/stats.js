@@ -84,6 +84,19 @@ export function distinctHizbRevised(completions, hizbList, startDate, endDate) {
   return set.size
 }
 
+export function missingHizbInPeriod(completions, hizbList, startDate, endDate) {
+  const dates = dateRangeISO(startDate, endDate)
+  const seen = new Set()
+
+  for (const iso of dates) {
+    for (const h of hizbList) {
+      if (completions[completionKey(iso, h)]) seen.add(h)
+    }
+  }
+
+  return hizbList.filter((h) => !seen.has(h))
+}
+
 // Données pour le graphique : nombre de cases cochées par jour sur la période
 export function dailyCountsSeries(completions, hizbList, startDate, endDate) {
   const dates = dateRangeISO(startDate, endDate)

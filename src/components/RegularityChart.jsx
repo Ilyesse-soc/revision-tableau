@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react'
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts'
 import { addDays, toISODate, fromISODate } from '../utils/dateUtils'
-import { dailyCountsSeries, computeRegularity, distinctHizbRevised } from '../utils/stats'
+import { dailyCountsSeries, computeRegularity, distinctHizbRevised, missingHizbInPeriod } from '../utils/stats'
 
 const PERIODS = [
   { key: '2w', label: '2 semaines', days: 14 },
@@ -31,6 +31,11 @@ export default function RegularityChart({ completions, hizbList, today, cycleSta
 
   const distinctHizb = useMemo(
     () => distinctHizbRevised(completions, hizbList, startDate, endDate),
+    [completions, hizbList, startDate, endDate]
+  )
+
+  const missingHizb = useMemo(
+    () => missingHizbInPeriod(completions, hizbList, startDate, endDate),
     [completions, hizbList, startDate, endDate]
   )
 
@@ -79,6 +84,33 @@ export default function RegularityChart({ completions, hizbList, today, cycleSta
           <span className={isDark ? 'text-slate-400' : 'text-slate-600'}>Hizb distincts : </span>
           <span className={`font-semibold ${isDark ? 'text-white' : 'text-slate-900'}`}>{distinctHizb}</span>
         </div>
+      </div>
+
+      <div className={`mb-3 rounded-xl border px-3 py-2 ${isDark ? 'border-slate-800 bg-slate-950/40' : 'border-slate-200 bg-slate-50'}`}>
+        <div className="flex items-center justify-between gap-2 mb-2">
+          <p className={`text-xs font-semibold uppercase tracking-wide ${isDark ? 'text-slate-400' : 'text-slate-600'}`}>
+            Hizb non révisés sur la période
+          </p>
+          <span className={`text-xs ${isDark ? 'text-slate-500' : 'text-slate-600'}`}>
+            {missingHizb.length}/{hizbList.length}
+          </span>
+        </div>
+        {missingHizb.length === 0 ? (
+          <p className="text-sm font-medium text-emerald-500">Tous les Hizb de la période ont été révisés.</p>
+        ) : (
+          <div className="flex flex-wrap gap-2">
+            {missingHizb.map((hizb) => (
+              <span
+                key={hizb}
+                className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium ${
+                  isDark ? 'bg-amber-500/10 text-amber-300 border border-amber-500/20' : 'bg-amber-100 text-amber-800 border border-amber-200'
+                }`}
+              >
+                Hizb {hizb}
+              </span>
+            ))}
+          </div>
+        )}
       </div>
 
       <div className="h-52 w-full">
